@@ -19,11 +19,11 @@
  }
 
  .match {
-     background: #fff;
-     border-radius: 8px;
+     /* background: #fff; */
+     /* box-shadow: 0 1px 4px rgb(0 0 0 / 22%); */
+     /* border-radius: 8px; */
      padding: 8px;
      margin: 18px 0;
-     box-shadow: 0 1px 4px rgb(0 0 0 / 22%);
      width: 210px;
      display: flex;
      flex-direction: column;
@@ -42,10 +42,18 @@
      /* ruang untuk centang */
  }
 
+ .round:nth-child(2) .match .player[data-pos="a"] {
+    margin-bottom: 125px;
+  }
+
+  .round:nth-child(3) .match .player[data-pos="a"] {
+    margin-bottom: 305px;
+  }
+
  .player[data-pos="a"] {
      background-color: #dc3545;
      /* merah */
-     margin-bottom: 6px;
+     margin-bottom: 15px;
  }
 
  .player[data-pos="b"] {
@@ -123,9 +131,32 @@
 }
 
 .round:nth-child(2) .match {
-    margin: 100px 0;
+    margin: 55px 0;
 }
 
 .round:nth-child(3) .match {
     margin: 140px 0;
+}
+.garis-bagan{
+    position: absolute;
+    border-top: 1px solid;
+    width: 30px;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    height: calc(100% - 70px);
+    top: 25%;
+    right: -22px;
+}
+.garis-bagan-2{
+    position: absolute;
+    width: 55px;
+    border-bottom: 1px solid;
+    top: 50%;
+    left: 110%;
+}
+.round:nth-child(2) .garis-bagan{
+    top: 14%;
+}
+.round:nth-child(3) .garis-bagan{
+    top: 8%;
 }
