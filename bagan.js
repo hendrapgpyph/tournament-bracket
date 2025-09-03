@@ -1,6 +1,7 @@
 var bagan_simpan = [];
 var bagan_keluar_undi = [];
 function GenerateBagan(currentPlayers) {
+    // console.log(currentPlayers);
     bagan_keluar_undi = [];
     const $container = $('.bracket');
     $container.empty();
@@ -113,10 +114,10 @@ function GenerateBagan(currentPlayers) {
     });
 
     updateWinnerBox();
-    $('.round').eq(0).find('.match').each(function(){
-        if($(this).find('.none').length > 0){
-            $(this).find('.player').each(function(){
-                $(this).find('p').each(function(){
+    $('.round').eq(0).find('.match').each(function () {
+        if ($(this).find('.none').length > 0) {
+            $(this).find('.player').each(function () {
+                $(this).find('p').each(function () {
                     $(this).removeClass('display-kabupaten');
                     $(this).removeClass('display-nama');
                 });
@@ -130,27 +131,42 @@ function GenerateBagan(currentPlayers) {
 function preparePlayersArray(players) {
     const total = players.length;
     var newPlayers = [...players];
-    newPlayers.reverse();
 
-    if (total < 4) {
+    if (total == 5) {
+        let playersnya = [newPlayers[0], '--', newPlayers[1], '--', newPlayers[2], '--', newPlayers[3], newPlayers[4]];
+        newPlayers = playersnya;
+    } else if (total < 4) {
+        newPlayers.reverse();
         // kurang dari 4 → kalau ganjil tambahin 1 bye
         if (total % 2 === 1) {
             newPlayers.push('--');
         }
+        newPlayers.reverse();
     } else {
+        newPlayers.reverse();
         // 4 atau lebih
         const remainder = total % 4;
 
-        if (remainder === 2) {
-            // kalau sisa 2 → tambahin 2 bye (biar jadi pasangan di round 1)
+        if (remainder === 1) {
+            if (total < 4) {
+                // kalau sisa 1 → tambahin 1 bye
+                newPlayers.push('--');
+                newPlayers.push('--');
+                newPlayers.push('--');
+            } else {
+                newPlayers.push('--');
+            }
+        } else if (remainder === 2) {
+            // kalau sisa 2 → tambahin 2 bye
             newPlayers.splice(total - 1, 0, '--'); // selipin sebelum terakhir
-            newPlayers.push('--');                 // tambah satu lagi di akhir
+            newPlayers.push('--');
         } else if (remainder === 3) {
             // kalau sisa 3 → tambahin 1 bye
             newPlayers.push('--');
         }
+        newPlayers.reverse();
     }
-    newPlayers.reverse();
+
     return newPlayers;
 }
 
@@ -193,7 +209,7 @@ function generateUndian() {
     let display_index = '';
     let bagans = [];
     bagan_simpan.forEach(val => {
-        if(val != '--'){
+        if (val != '--') {
             bagans.push(val);
         }
     });
@@ -207,56 +223,66 @@ function generateUndian() {
             break
         }
     }
-    if(display_index === ''){
+    if (display_index === '') {
         return;
     }
     Swal.fire({
-      title: 'Mengundi urutan pemain..',
-      html: `
+        title: 'Mengundi urutan pemain..',
+        html: `
         <span id="display_undi_kabupaten"></span><br>
         <span id="display_undi_nama"></span>
       `,
-      allowOutsideClick: false,
-      showConfirmButton: false,
-      didOpen: () => {
-        Swal.showLoading();
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
 
-        // interval untuk update teks acak
-        const interval = setInterval(() => {
-          let bagan_acak = [];
-          for (let index = 0; index < bagans.length; index++) {
-            if(bagan_keluar_undi.indexOf(bagans[index]) === -1){
-                bagan_acak.push(bagans[index]);
-            }
-          }
-          const data_ambil = bagan_acak[Math.floor(Math.random() * bagan_acak.length)];
-          let kab = TampilNamaKabupaten(data_ambil);
-          let nm = TampilNamaPemain(data_ambil);
-          document.getElementById("display_undi_kabupaten").textContent = kab;
-          document.getElementById("display_undi_nama").textContent = nm;
-        }, 150); // ganti angka buat kecepatan acak
+            // interval untuk update teks acak
+            const interval = setInterval(() => {
+                let bagan_acak = [];
+                for (let index = 0; index < bagans.length; index++) {
+                    if (bagan_keluar_undi.indexOf(bagans[index]) === -1) {
+                        bagan_acak.push(bagans[index]);
+                    }
+                }
+                const data_ambil = bagan_acak[Math.floor(Math.random() * bagan_acak.length)];
+                let kab = TampilNamaKabupaten(data_ambil);
+                let nm = TampilNamaPemain(data_ambil);
+                document.getElementById("display_undi_kabupaten").textContent = kab;
+                document.getElementById("display_undi_nama").textContent = nm;
+            }, 150); // ganti angka buat kecepatan acak
 
-        // setelah 5 detik, hentikan acak dan pilih final
-        setTimeout(() => {
-            clearInterval(interval);
-            $('.display-kabupaten').eq(display_index).html(display_kabupaten);
-            $('.display-nama').eq(display_index).html(display_nama);
-            $('.display-kabupaten').eq(display_index).attr('data-payload', '');
-            $('.display-nama').eq(display_index).attr('data-payload', '');
-            $('.display-nama').eq(display_index).show();
-            bagan_keluar_undi.push(display_nama+"_"+display_kabupaten);
-            Swal.fire(display_kabupaten,display_nama,'success');
-        }, bagan_keluar_undi.length == bagans.length - 1 ? 100 : 3000);
-      }
+            // setelah 5 detik, hentikan acak dan pilih final
+            setTimeout(() => {
+                clearInterval(interval);
+                $('.display-kabupaten').eq(display_index).html(display_kabupaten);
+                $('.display-nama').eq(display_index).html(display_nama);
+                $('.display-kabupaten').eq(display_index).attr('data-payload', '');
+                $('.display-nama').eq(display_index).attr('data-payload', '');
+                $('.display-nama').eq(display_index).show();
+                bagan_keluar_undi.push(display_nama + "_" + display_kabupaten);
+                Swal.fire(display_kabupaten, display_nama, 'success');
+            }, bagan_keluar_undi.length == bagans.length - 1 ? 100 : 2000);
+        }
     });
 }
 
 function shuffleArray(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    // ambil index random dari 0 sampai i
-    const j = Math.floor(Math.random() * (i + 1));
-    // tukar elemen arr[i] dengan arr[j]
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+    if (arr.length <= 1) return arr; // kalau 0 atau 1 elemen, nggak bisa diacak
+
+    let shuffled = [...arr];
+    let isSame = true;
+
+    while (isSame) {
+        // Fisher-Yates shuffle
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        // cek apakah sama dengan array asli
+        isSame = arr.every((val, idx) => val === shuffled[idx]);
+    }
+
+    return shuffled;
 }

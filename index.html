@@ -59,11 +59,15 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-9">
-                                <div class="d-flex justify-content-between gap-1">
-                                    <h3 class="text-center" id="nama-pertandingan"></h3>
-                                    <div>
-                                        <button type="button" class="btn mt-0 btn-outline-primary btn-generate-undian">Generate Undian</button>
-                                        <button type="button" class="btn mt-0 btn-outline-danger btn-reset-bagan">Reset Bagan</button>
+                                <div class="row justify-content-between">
+                                    <div class="col-md-8">
+                                        <h3 id="nama-pertandingan"></h3>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="d-flex justify-content-end gap-1">
+                                            <button type="button" class="btn mt-0 w-50 btn-outline-primary btn-generate-undian">Generate Undian</button>
+                                            <button type="button" class="btn mt-0 w-50 btn-outline-danger btn-reset-bagan">Reset Bagan</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="bracket">
@@ -101,7 +105,7 @@
     <script>
         $(document).ready(function () {
             // let fix_pemains = [];
-            // for (let index = 1; index <= 7; index++) {
+            // for (let index = 1; index <= 5; index++) {
             //     fix_pemains.push('pemain'+index+"_kabupaten"+index)
                 
             // }
