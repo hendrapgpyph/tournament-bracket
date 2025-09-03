@@ -1,0 +1,131 @@
+ body {
+     padding: 24px;
+     background: #f8f9fa;
+     font-family: Arial, sans-serif;
+ }
+
+ .bracket {
+     display: flex;
+     align-items: center;
+     gap: 40px;
+     overflow-x: auto;
+ }
+
+ .round {
+     display: flex;
+     flex-direction: column;
+     align-items: flex-start;
+     min-width: 200px;
+ }
+
+ .match {
+     background: #fff;
+     border-radius: 8px;
+     padding: 8px;
+     margin: 18px 0;
+     box-shadow: 0 1px 4px rgb(0 0 0 / 22%);
+     width: 210px;
+     display: flex;
+     flex-direction: column;
+ }
+
+ .player {
+     padding: 8px 10px;
+     border-radius: 6px;
+     cursor: pointer;
+     color: white;
+     user-select: none;
+     transition: filter 0.2s;
+     position: relative;
+     /* untuk posisi centang */
+     padding-right: 28px;
+     /* ruang untuk centang */
+ }
+
+ .player[data-pos="a"] {
+     background-color: #dc3545;
+     /* merah */
+     margin-bottom: 6px;
+ }
+
+ .player[data-pos="b"] {
+     background-color: #0d6efd;
+     /* biru */
+ }
+
+ .player.winner[data-pos="a"] {
+     background-color: #b02a37;
+     /* merah gelap */
+ }
+
+ .player.winner[data-pos="b"] {
+     background-color: #084298;
+     /* biru gelap */
+ }
+
+ /* Centang hijau di kanan untuk pemenang */
+ .player.winner::after {
+     content: "✓";
+     color: #28a745;
+     /* hijau */
+     font-weight: bold;
+     font-size: 1.3em;
+     position: absolute;
+     right: 8px;
+     top: 50%;
+     transform: translateY(-50%);
+     pointer-events: none;
+ }
+
+ .player:hover {
+     filter: brightness(0.9);
+ }
+
+ .col-title {
+     font-weight: 600;
+     margin-bottom: 10px;
+ }
+
+ .final-winner {
+     font-size: 1.25rem;
+     font-weight: 700;
+     padding: 7px 10px 7px 50px;
+     /* beri ruang kiri untuk ikon */
+     border-radius: 8px;
+     width: 250px;
+     background-color: white;
+     color: #198754;
+     user-select: none;
+     /* text-align: center; */
+     border: 2px solid #198754;
+     position: relative;
+ }
+
+ .final-winner::before {
+     content: "🏆";
+     position: absolute;
+     left: 12px;
+     top: 50%;
+     transform: translateY(-50%);
+     font-size: 1.4rem;
+ }
+
+ .text-center {
+     text-align: center;
+ }
+
+ .btn-kembali-bagan, .btn-reset-bagan, .btn-generate-undian {
+     margin-top: 12px;
+ }
+
+ .round:nth-child(1) .match {
+    margin: 20px 0;
+}
+
+.round:nth-child(2) .match {
+    margin: 100px 0;
+}
+
+.round:nth-child(3) .match {
+    margin: 140px 0;
+}

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tournament Bracket</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="mt-4">
+        <div class="row">
+            <!-- <div class="col-12">
+                <h2 class="text-center">Tournament Bracket</h2>
+            </div> -->
+            <div class="col-12 div-all div-input">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <p class="text-center">Masukkan jumlah pemain dan nama pertandingan</p>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="" id="form-awal" method="post">
+                                    <div class="form-group mb-3">
+                                        <label>Nama Pertandingan</label>
+                                        <input type="text" value="" id="nama_pertandingan" class="form-control"
+                                            placeholder="Masukkan nama pertandingan..." required>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label>Jumlah Pemain</label>
+                                        <input type="number" id="jumlah_pemain" min="2" value="" class="form-control"
+                                            placeholder="Masukkan jumlah pemain..." required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-submit-step1 w-100">Lanjutkan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-4 div-all div-pemain" style="display: none;">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="" id="form-pemain" method="post">
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 div-all div-bagan" style="display: none;">
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="d-flex justify-content-between gap-1">
+                                    <h3 class="text-center" id="nama-pertandingan"></h3>
+                                    <div>
+                                        <button type="button" class="btn mt-0 btn-outline-primary btn-generate-undian">Generate Undian</button>
+                                        <button type="button" class="btn mt-0 btn-outline-danger btn-reset-bagan">Reset Bagan</button>
+                                    </div>
+                                </div>
+                                <div class="bracket">
+        
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="border-left: 1px solid #8080802e;">
+                                <p class="mb-0">Daftar Nama Pemain</p>
+                                <table class="table table-hover table-striped table-sm" style="font-size: 11px;">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Pemain</th>
+                                            <th>Kabupaten</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-pemain">
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-1">
+                            <button type="button" class="btn btn-outline-danger btn-kembali-bagan">Kembali</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="bagan.js"></script>
+    <script>
+        $(document).ready(function () {
+            // let fix_pemains = [];
+            // for (let index = 1; index <= 7; index++) {
+            //     fix_pemains.push('pemain'+index+"_kabupaten"+index)
+                
+            // }
+            // fix_pemains = preparePlayersArray(fix_pemains);
+            // GenerateBagan(fix_pemains);
+            // generateTablePemain(fix_pemains);
+
+            $('#form-awal').on('submit', function (e) {
+                e.preventDefault();
+
+                let txt = ``;
+                let jumlah = $('#jumlah_pemain').val();
+                for (let index = 1; index <= jumlah; index++) {
+                    txt += `<div class="form-group mb-3">
+                    <label>Pemain ${index}</label>
+                    <div class="input-group">
+                        <input type="text" value="" class="form-control nama_pemain" placeholder="Nama pemain ${index}..." required style="width: 230px;">
+                        <input type="text" class="form-control kabupaten_pemain" placeholder="Kabupaten.." required>
+                    </div>
+                </div>`;
+                }
+                txt += `<button type="submit" class="btn btn-primary btn-submit-step2 w-100 mb-2">Lanjutkan</button>`;
+                txt += `<button type="button" class="btn btn-outline-danger btn-kembali-pemain w-100">Kembali</button>`;
+                $('#form-pemain').html(txt);
+
+                $('.div-all').hide();
+                $('.div-pemain').fadeIn(500);
+
+                $('.btn-kembali-pemain').on('click', function () {
+                    $('.div-all').hide();
+                    $('.div-input').fadeIn(500);
+                });
+
+                sessionStorage.setItem("bracket_step1", JSON.stringify({nama : $('#nama_pertandingan').val(), jumlah : $('#jumlah_pemain').val()}));
+            });
+
+            $('#form-pemain').on('submit', function (e) {
+                e.preventDefault();
+                $('.div-all').hide();
+                $('.div-bagan').fadeIn(500);
+
+                let pemains = [];
+                let kabupatens = [];
+                $('.nama_pemain').each(function () {
+                    pemains.push($(this).val());
+                })
+                $('.kabupaten_pemain').each(function () {
+                    kabupatens.push($(this).val());
+                })
+                let fix_pemains = [];
+                pemains.forEach((value, index) => {
+                    fix_pemains.push(pemains[index]+"_"+kabupatens[index]);
+                });
+
+                sessionStorage.setItem("bracket_step2", JSON.stringify(fix_pemains));
+
+                fix_pemains = preparePlayersArray(fix_pemains);
+                GenerateBagan(fix_pemains);
+                generateTablePemain(fix_pemains);
+
+                let nama_pertandingan = $('#nama_pertandingan').val();
+                $('#nama-pertandingan').html(nama_pertandingan);
+
+            });
+
+            $('.btn-kembali-bagan').on('click', function () {
+                $('.div-all').hide();
+                $('.div-pemain').fadeIn(500);
+            });
+
+            $('.btn-reset-bagan').on('click', function(){
+                GenerateBagan(bagan_simpan);
+            });
+
+            $('.btn-generate-undian').on('click', function(){
+                generateUndian();
+            });
+
+
+            var step1 = sessionStorage.getItem('bracket_step1');
+            if(step1 != null){
+                step1 = JSON.parse(step1);
+                $('#nama_pertandingan').val(step1.nama);
+                $('#jumlah_pemain').val(step1.jumlah);
+                $('.btn-submit-step1').trigger('click');
+
+                var step2 = sessionStorage.getItem('bracket_step2');
+                if(step2 != null){
+                    step2 = JSON.parse(step2);
+                    step2.forEach((val, index) => {
+                        let value = val.split("_");
+                        $('.nama_pemain').eq(index).val(value[0]);
+                        $('.kabupaten_pemain').eq(index).val(value[1]);
+                    });
+                    $('.btn-submit-step2').trigger('click');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
