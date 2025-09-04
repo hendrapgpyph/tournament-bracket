@@ -1,6 +1,8 @@
 var bagan_simpan = [];
 var bagan_keluar_undi = [];
+var finish_undian = false;
 function GenerateBagan(currentPlayers) {
+    finish_undian = false;
     // console.log(currentPlayers);
     bagan_keluar_undi = [];
     const $container = $('.bracket');
@@ -270,26 +272,56 @@ function generateTablePemain(players) {
 // }
 
 function generateUndian() {
+    if(finish_undian){
+        return;
+    }
     let bagans = [];
     bagan_simpan.forEach(val => {
         if (val != '--') {
             bagans.push(val);
         }
     });
-    for (let index = 0; index < bagans.length; index++) {
-        let payload_kabupaten = $('.display-kabupaten').eq(index).attr('data-payload');
-        let payload_nama = $('.display-nama').eq(index).attr('data-payload');
-        if (payload_kabupaten != '') {
+    Swal.fire({
+        title: 'Mengundi urutan pemain..',
+        html: `
+            <span id="display_undi_kabupaten"></span><br>
+            <span id="display_undi_nama"></span>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+
+            // interval untuk update teks acak
+            const interval = setInterval(() => {
+                const data_ambil = bagans[Math.floor(Math.random() * bagans.length)];
+                let kab = TampilNamaKabupaten(data_ambil);
+                let nm = TampilNamaPemain(data_ambil);
+                document.getElementById("display_undi_kabupaten").textContent = kab;
+                document.getElementById("display_undi_nama").textContent = nm;
+            }, 150); // ganti angka buat kecepatan acak
+
             setTimeout(() => {
-                $('.display-kabupaten').eq(index).html(payload_kabupaten);
-                $('.display-nama').eq(index).html(payload_nama);
-                $('.display-kabupaten').eq(index).attr('data-payload', '');
-                $('.display-nama').eq(index).attr('data-payload', '');
-                $('.display-nama').eq(index).show();
-                bagan_keluar_undi.push(payload_nama + "_" + payload_kabupaten);
-            }, (index * 700));
+                clearInterval(interval);
+                Swal.close();
+                for (let index = 0; index < bagans.length; index++) {
+                    let payload_kabupaten = $('.display-kabupaten').eq(index).attr('data-payload');
+                    let payload_nama = $('.display-nama').eq(index).attr('data-payload');
+                    if (payload_kabupaten != '') {
+                        setTimeout(() => {
+                            finish_undian = true;
+                            $('.display-kabupaten').eq(index).html(payload_kabupaten);
+                            $('.display-nama').eq(index).html(payload_nama);
+                            $('.display-kabupaten').eq(index).attr('data-payload', '');
+                            $('.display-nama').eq(index).attr('data-payload', '');
+                            $('.display-nama').eq(index).show();
+                            bagan_keluar_undi.push(payload_nama + "_" + payload_kabupaten);
+                        }, (index * 700));
+                    }
+                }
+            }, 5000);
         }
-    }
+    });
 }
 
 function shuffleArray(arr) {
