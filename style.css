@@ -160,3 +160,10 @@
 .round:nth-child(3) .garis-bagan{
     top: 8%;
 }
+.passkey{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: white;
+    top: 0;
+}

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tournament Bracket</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="style.css?v=27fe6f8a-6c0a-4a29-b9e9-8764a7959614" rel="stylesheet">
+    <link href="style.css?v=f67a57e1-8bef-4420-b9ba-807bc3a508d0" rel="stylesheet">
 </head>
 
 <body>
@@ -98,10 +98,26 @@
             </div>
         </div>
     </div>
+    <div class="passkey">
+        <div class="row justify-content-center align-items-center" style="height: 80vh;"> 
+            <div class="col-md-5">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="" method="post" id="form-submit-passkey">
+                            <div class="form-group mb-3">
+                                <input type="number" id="passkey_input" class="form-control" placeholder="Masukkan passkey..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-submit-passkey w-100">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="bagan.js?v=27fe6f8a-6c0a-4a29-b9e9-8764a7959614"></script>
+    <script src="bagan.js?v=f67a57e1-8bef-4420-b9ba-807bc3a508d0"></script>
     <script>
         $(document).ready(function () {
             // let fix_pemains = [];
@@ -184,6 +200,11 @@
                 generateUndian();
             });
 
+            var skip_passkey = sessionStorage.getItem('skip_passkey');
+            if(skip_passkey == 1){
+                $('.passkey').addClass('d-none');
+            }
+
 
             var step1 = sessionStorage.getItem('bracket_step1');
             if(step1 != null){
@@ -203,6 +224,17 @@
                     $('.btn-submit-step2').trigger('click');
                 }
             }
+
+            $('#form-submit-passkey').on('submit', function (e) {
+                e.preventDefault();
+                let pass = $('#passkey_input').val();
+                if(pass == 112321){
+                    $('.passkey').addClass('d-none');
+                    sessionStorage.setItem("skip_passkey", 1);
+                }else{
+                    Swal.fire('Passkey salah','','error');
+                }
+            });
         });
     </script>
 </body>
